@@ -23,6 +23,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 add_executable(server
     main.cpp
     protocol/dispatcher.cpp
+    server/map_generator.cpp
 )
 
 # ----------------------------
@@ -30,8 +31,9 @@ add_executable(server
 # ----------------------------
 target_include_directories(server
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}
         ${Boost_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/third_party/FastNoiseLite/Cpp
 )
 
 # ----------------------------

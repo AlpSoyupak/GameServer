@@ -5,6 +5,7 @@
 #include "buffer.hpp"
 #include "serialize.hpp"
 #include "packets.hpp"
+#include "server/server_state.hpp"
 
 inline ByteBuffer build_join_packet() {
     ByteBuffer buf;
@@ -55,6 +56,24 @@ inline ByteBuffer build_state_packet(
         write<uint32_t>(buf, p.id);
         write<float>(buf, p.x);
         write<float>(buf, p.y);
+    }
+
+    return buf;
+}
+
+inline ByteBuffer build_map_init_packet(const WorldMap& map) {
+    ByteBuffer buf;
+
+    write<uint8_t>(buf, static_cast<uint8_t>(PacketType::MapInit));
+    write<uint8_t>(buf, PROTOCOL_VERSION);
+
+    write<uint32_t>(buf, map.width);
+    write<uint32_t>(buf, map.height);
+    write<uint32_t>(buf, map.seed);
+
+    // Walkable bitmap
+    for (uint8_t cell : map.walkable) {
+        buf.push_back(std::byte{cell});
     }
 
     return buf;

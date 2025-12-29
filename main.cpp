@@ -12,8 +12,9 @@ int main() {
 
         udp::socket socket(io, udp::endpoint(udp::v4(), 7777));
 
-        PacketDispatcher dispatcher;
-
+        ServerState state; 
+        PacketDispatcher dispatcher(state, socket);
+        
         std::array<std::byte, 1024> recv_buffer;
         udp::endpoint remote_endpoint;
 
