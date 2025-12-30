@@ -17,23 +17,6 @@ inline ByteBuffer build_join_packet() {
     return buf;
 }
 
-inline ByteBuffer build_input_packet(
-    uint32_t player_id,
-    int16_t move_x,
-    int16_t move_y
-) {
-    ByteBuffer buf;
-    buf.reserve(10);
-
-    write<uint8_t>(buf, static_cast<uint8_t>(PacketType::Input));
-    write<uint8_t>(buf, PROTOCOL_VERSION);
-    write<uint32_t>(buf, player_id);
-    write<int16_t>(buf, move_x);
-    write<int16_t>(buf, move_y);
-
-    return buf;
-}
-
 struct PlayerState {
     uint32_t id;
     float x;
@@ -75,6 +58,33 @@ inline ByteBuffer build_map_init_packet(const WorldMap& map) {
     for (uint8_t cell : map.walkable) {
         buf.push_back(std::byte{cell});
     }
+
+    return buf;
+}
+
+inline ByteBuffer build_unit_update_packet(const Unit& unit) {
+    ByteBuffer buf;
+
+    // Packet type and protocol version
+    write<uint8_t>(buf, static_cast<uint8_t>(PacketType::Command));
+    write<uint8_t>(buf, PROTOCOL_VERSION);
+
+    // Unit ID and owner
+    write<uint32_t>(buf, unit.unit_id);
+    write<uint32_t>(buf, unit.player_id);
+
+    // Current position
+    write<int32_t>(buf, unit.x);
+    write<int32_t>(buf, unit.y);
+
+    // Target position (where the unit is moving toward)
+    write<int32_t>(buf, unit.target_x);
+    write<int32_t>(buf, unit.target_y);
+
+    // Moving state (1 = moving, 0 = idle)
+    write<uint8_t>(buf, unit.is_moving ? 1 : 0);
+
+    // Optional: add more fields here (health, type, etc.)
 
     return buf;
 }

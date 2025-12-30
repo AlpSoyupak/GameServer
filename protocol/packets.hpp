@@ -3,7 +3,7 @@
 
 enum class PacketType : uint8_t {
     Join  = 1,
-    Input = 2,
+    Command = 6,
     State = 3,
     MapInit = 4
 };

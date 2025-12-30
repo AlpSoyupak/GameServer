@@ -19,5 +19,6 @@ private:
     boost::asio::ip::udp::socket& socket_;
 
     void handle_join(const Endpoint& from);
+    void handle_command(const CommandPacket& cmd);
 };
 
